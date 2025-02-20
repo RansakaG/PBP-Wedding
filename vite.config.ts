@@ -9,11 +9,19 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   build: {
-    assetsInlineLimit: 0, // Don't inline any assets as base64
+    assetsInlineLimit: 0,
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name]-[hash][extname]', // Keep original file names with hash
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
     },
+    sourcemap: false,
+    target: 'es2018',
+  },
+  server: {
+    host: '0.0.0.0',
+    port: parseInt(process.env.PORT || '8080'),
   },
 });
