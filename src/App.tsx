@@ -17,7 +17,6 @@ import CategoryGallery from './pages/gallery/CategoryGallery';
 function App() {
   return (
     <Router 
-      basename="/PBP-Wedding" 
       future={{ 
         v7_startTransition: true,
         v7_relativeSplatPath: true 
