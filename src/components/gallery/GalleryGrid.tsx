@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GalleryImage } from '../../types/gallery';
 import { useImageLoad } from '../../hooks/useImageLoad';
@@ -96,60 +96,27 @@ function Lightbox({ image, onClose, onPrev, onNext, hasPrev, hasNext }: Lightbox
   );
 }
 
-function GalleryItem({ image, index, onImageClick }: { image: GalleryImage; index: number; onImageClick: () => void }) {
-  const { isLoading, error } = useImageLoad(image.url);
-  const ref = useRef<HTMLDivElement>(null);
-  const entry = useIntersectionObserver(ref, {});
-  const isVisible = !!entry?.isIntersecting;
-
+const GalleryItem = memo(({ image, index, onImageClick }) => {
   return (
     <motion.div
-      ref={ref}
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-gray-100 cursor-zoom-in"
-      onClick={onImageClick}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: Math.min(index * 0.1, 1) }}
+      className="relative aspect-square group cursor-pointer"
+      onClick={() => onImageClick(image)}
+      style={{ willChange: 'opacity' }}
     >
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <LoadingSpinner size="md" />
-        </div>
-      )}
-      
-      {error && (
-        <div className="absolute inset-0 flex items-center justify-center text-red-500">
-          <p>Failed to load image</p>
-        </div>
-      )}
-
-      <motion.img
+      <img
         src={image.url}
         alt={image.title}
-        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        className="w-full h-full object-cover rounded-lg"
         loading="lazy"
+        decoding="async"
       />
-      
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 opacity-0 group-hover:opacity-100 transition-opacity"
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <button className="inline-flex items-center text-white text-sm">
-            <ZoomIn className="w-4 h-4 mr-2" />
-            Click to view
-          </button>
-        </div>
-      </motion.div>
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
     </motion.div>
   );
-}
+});
 
 export default function GalleryGrid({ images, onLoadMore, hasMore = false }: GalleryGridProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);

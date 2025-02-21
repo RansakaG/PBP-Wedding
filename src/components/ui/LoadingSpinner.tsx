@@ -19,13 +19,15 @@ export default function LoadingSpinner({ size = 'md', className = '' }: LoadingS
         className={`border-4 border-brand-light rounded-full ${sizeClasses[size]}`}
         style={{ 
           borderTopColor: 'var(--brand-primary)',
-          borderRightColor: 'var(--brand-primary)'
+          borderRightColor: 'var(--brand-primary)',
+          willChange: 'transform'
         }}
         animate={{ rotate: 360 }}
         transition={{
-          duration: 1,
+          duration: 0.8,
           repeat: Infinity,
-          ease: 'linear'
+          ease: 'linear',
+          repeatType: 'loop'
         }}
       />
     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Instagram, Facebook, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,20 +22,22 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
   };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           className="fixed inset-0 bg-brand-beige z-40"
+          style={{ willChange: 'opacity' }}
         >
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1, duration: 0.15 }}
             className="flex flex-col items-center justify-center min-h-screen px-6 py-24"
+            style={{ willChange: 'opacity' }}
           >
             {isAuthenticated && (
               <motion.div
@@ -46,7 +47,7 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
               >
                 <div className="flex items-center justify-center space-x-2 text-brand-dark mb-2">
                   <User className="w-5 h-5" />
-                  <span className="font-medium">{user?.name}</span>
+                  <span className="font-medium">{user?.fullName}</span>
                 </div>
               </motion.div>
             )}

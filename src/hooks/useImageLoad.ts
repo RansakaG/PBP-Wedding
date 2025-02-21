@@ -1,12 +1,25 @@
 import { useState, useEffect } from 'react';
 
-export function useImageLoad(src: string) {
+interface UseImageLoadOptions {
+  priority?: boolean;
+  lazy?: boolean;
+}
+
+export function useImageLoad(src: string, options: UseImageLoadOptions = {}) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const img = new Image();
     
+    if (options.priority) {
+      img.fetchPriority = 'high';
+    }
+
+    if (options.lazy) {
+      img.loading = 'lazy';
+    }
+
     const handleLoad = () => {
       setIsLoading(false);
       setError(null);
@@ -24,10 +37,9 @@ export function useImageLoad(src: string) {
     return () => {
       img.removeEventListener('load', handleLoad);
       img.removeEventListener('error', handleError);
-      // Cancel the image load if the component unmounts
       img.src = '';
     };
-  }, [src]);
+  }, [src, options.priority, options.lazy]);
 
   return { isLoading, error };
 }

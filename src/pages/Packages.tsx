@@ -25,51 +25,27 @@ export default function Packages() {
   const weddingPackages = packages.filter(pkg => pkg.category === 'Wedding');
 
   const basePrices = {
-    'wedding-luxury': 4500,
-    'wedding-premium': 3500,
-    'wedding-classic': 2800,
-    'wedding-essential': 2000,
-    'wedding-intimate': 1500,
-    'wedding-micro': 1000
+    'basic-digital-engagement': 144000,
+    'standard-engagement-album': 214000,
+    'premium-wedding-full': 334000
   };
 
   // Add-on services pricing data
   const additionalServices = {
-    'wedding-luxury': [
-      { id: 'second-engagement', name: 'Second Engagement Session', price: 400 },
-      { id: 'extra-album', name: 'Extra Premium Album', price: 500 },
-      { id: 'video-highlight', name: 'Video Highlight Reel', price: 800 },
-      { id: 'prints-collection', name: 'Luxury Print Collection', price: 300 }
+    'basic-digital-engagement': [
+      { id: 'extra-hour', name: 'Additional Hour Coverage', price: 10000 },
+      { id: 'extra-enlargement', name: 'Extra 12x18 Wooden Enlargement', price: 15000 }
     ],
-    'wedding-premium': [
-      { id: 'engagement', name: 'Extended Engagement Session', price: 300 },
-      { id: 'album', name: 'Premium Photo Album', price: 400 },
-      { id: 'drone', name: 'Extended Drone Coverage', price: 300 },
-      { id: 'prints', name: 'Premium Prints Package', price: 250 }
+    'standard-engagement-album': [
+      { id: 'extra-pages', name: 'Additional 10 Album Pages', price: 12000 },
+      { id: 'extra-enlargement', name: 'Extra 16x24 Wooden Enlargement', price: 18000 },
+      { id: 'thank-you-cards', name: 'Thank You Cards (4x6)', price: 80 }
     ],
-    'wedding-classic': [
-      { id: 'engagement', name: 'Engagement Session', price: 250 },
-      { id: 'album', name: 'Extra Photo Album', price: 300 },
-      { id: 'drone', name: 'Drone Coverage', price: 250 },
-      { id: 'prints', name: 'Classic Print Package', price: 200 }
-    ],
-    'wedding-essential': [
-      { id: 'engagement', name: 'Mini Engagement Session', price: 200 },
-      { id: 'album', name: 'Photo Album', price: 250 },
-      { id: 'extra-hours', name: 'Extra Coverage Hours', price: 200 },
-      { id: 'prints', name: 'Essential Print Package', price: 150 }
-    ],
-    'wedding-intimate': [
-      { id: 'engagement', name: 'Mini Engagement Session', price: 150 },
-      { id: 'album', name: 'Basic Photo Album', price: 200 },
-      { id: 'extra-hour', name: 'Extra Coverage Hour', price: 150 },
-      { id: 'prints', name: 'Print Package', price: 100 }
-    ],
-    'wedding-micro': [
-      { id: 'mini-engagement', name: 'Mini Engagement Session', price: 100 },
-      { id: 'album', name: 'Simple Photo Album', price: 150 },
-      { id: 'extra-hour', name: 'Extra Coverage Hour', price: 150 },
-      { id: 'prints', name: 'Basic Print Package', price: 75 }
+    'premium-wedding-full': [
+      { id: 'extra-pages', name: 'Additional 20 Album Pages', price: 20000 },
+      { id: 'extra-enlargement', name: 'Extra 20x30 Wooden Enlargement', price: 20000 },
+      { id: 'thank-you-cards', name: 'Additional Thank You Cards (4x6)', price: 80 },
+      { id: 'second-day', name: 'Second-day Coverage (4 hours)', price: 50000 }
     ]
   };
 
@@ -341,44 +317,44 @@ export default function Packages() {
                     <h3 className="text-sm font-medium text-brand-dark mb-3">Price Range</h3>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => setPriceRange(0, 2000)}
+                        onClick={() => setPriceRange(0, 200000)}
                         className={`px-3 py-1 rounded-full text-xs ${
-                          filters.priceRange?.max === 2000
+                          filters.priceRange?.max === 200000
                             ? 'bg-brand-primary text-white'
                             : 'bg-brand-beige/20 text-brand-dark hover:bg-brand-beige/30'
                         }`}
                       >
-                        Under $2,000
+                        Under LKR 200,000
                       </button>
                       <button
-                        onClick={() => setPriceRange(2000, 3000)}
+                        onClick={() => setPriceRange(200000, 300000)}
                         className={`px-3 py-1 rounded-full text-xs ${
-                          filters.priceRange?.min === 2000 && filters.priceRange?.max === 3000
+                          filters.priceRange?.min === 200000 && filters.priceRange?.max === 300000
                             ? 'bg-brand-primary text-white'
                             : 'bg-brand-beige/20 text-brand-dark hover:bg-brand-beige/30'
                         }`}
                       >
-                        $2,000 - $3,000
+                        LKR 200,000 - 300,000
                       </button>
                       <button
-                        onClick={() => setPriceRange(3000, 5000)}
+                        onClick={() => setPriceRange(300000, 500000)}
                         className={`px-3 py-1 rounded-full text-xs ${
-                          filters.priceRange?.min === 3000 && filters.priceRange?.max === 5000
+                          filters.priceRange?.min === 300000 && filters.priceRange?.max === 500000
                             ? 'bg-brand-primary text-white'
                             : 'bg-brand-beige/20 text-brand-dark hover:bg-brand-beige/30'
                         }`}
                       >
-                        $3,000 - $5,000
+                        LKR 300,000 - 500,000
                       </button>
                       <button
-                        onClick={() => setPriceRange(5000, Infinity)}
+                        onClick={() => setPriceRange(500000, Infinity)}
                         className={`px-3 py-1 rounded-full text-xs ${
-                          filters.priceRange?.min === 5000
+                          filters.priceRange?.min === 500000
                             ? 'bg-brand-primary text-white'
                             : 'bg-brand-beige/20 text-brand-dark hover:bg-brand-beige/30'
                         }`}
                       >
-                        $5,000+
+                        LKR 500,000+
                       </button>
                     </div>
                   </div>
@@ -449,7 +425,7 @@ export default function Packages() {
                   {isAuthenticated ? (
                     <div className="mb-6 text-center">
                       <span className="text-2xl font-serif text-brand-primary">
-                        ${basePrices[pkg.id as keyof typeof basePrices]}
+                        LKR {basePrices[pkg.id as keyof typeof basePrices]}
                       </span>
                     </div>
                   ) : (
@@ -503,11 +479,11 @@ export default function Packages() {
                             {isAuthenticated ? (
                               <div className="space-y-1 mt-2">
                                 <p className="text-xl font-serif text-brand-primary">
-                                  ${basePrices[pkg.id as keyof typeof basePrices]}
+                                  LKR {basePrices[pkg.id as keyof typeof basePrices]}
                                 </p>
                                 <div className="flex items-center justify-center text-xs text-brand-muted">
                                   <Info className="w-3 h-3 mr-1" />
-                                  <span>Up to ${getMaxPotentialPrice(pkg.id)} with add-ons</span>
+                                  <span>Up to LKR {getMaxPotentialPrice(pkg.id)} with add-ons</span>
                                 </div>
                               </div>
                             ) : (
@@ -573,7 +549,7 @@ export default function Packages() {
                         <td key={pkg.id} className="py-4 px-6 text-center border-b border-brand-beige/10">
                           {isAuthenticated ? (
                             <span className="text-lg font-serif text-brand-primary">
-                              ${basePrices[pkg.id as keyof typeof basePrices]}
+                              LKR {basePrices[pkg.id as keyof typeof basePrices]}
                             </span>
                           ) : (
                             <button
@@ -633,7 +609,7 @@ export default function Packages() {
                               {additionalServices[pkg.id as keyof typeof additionalServices]?.map(addon => (
                                 <div key={addon.id} className="text-xs">
                                   <span className="text-brand-dark">{addon.name}</span>
-                                  <span className="text-brand-primary ml-1">(+${addon.price})</span>
+                                  <span className="text-brand-primary ml-1">(+LKR {addon.price})</span>
                                 </div>
                               ))}
                             </div>
@@ -659,7 +635,7 @@ export default function Packages() {
                         <td key={pkg.id} className="py-4 px-6 text-center border-b border-brand-beige/10">
                           {isAuthenticated ? (
                             <span className="text-lg font-serif text-brand-primary">
-                              Up to ${getMaxPotentialPrice(pkg.id)}
+                              Up to LKR {getMaxPotentialPrice(pkg.id)}
                             </span>
                           ) : (
                             <button

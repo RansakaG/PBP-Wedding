@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/authStore';
 import Logo from './Logo';
 import MobileMenu from './MobileMenu';
 import LoginModal from '../auth/LoginModal';
-import { scrollToTop } from '../../utils/scrollUtils';
+import { scrollToTop, createScrollListener } from '../../utils/scrollUtils';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,11 +17,11 @@ export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuthStore();
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = createScrollListener(() => {
       setIsScrolled(window.scrollY > 50);
-    };
+    }, 50);
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -37,11 +37,14 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`w-full fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        initial={{ y: 0 }}
+        className={`w-full fixed top-0 left-0 right-0 z-50 transition-colors duration-200 will-change-transform ${
           isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'
         }`}
+        style={{
+          backfaceVisibility: 'hidden',
+          transform: 'translate3d(0,0,0)'
+        }}
       >
         <div className="max-w-screen-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">

@@ -43,6 +43,7 @@ export default function Home() {
   // Preload hero image
   useEffect(() => {
     const img = new Image();
+    img.fetchPriority = 'high';
     img.src = homeHeroImage;
     img.onload = () => setIsImageLoaded(true);
   }, []);
@@ -57,33 +58,46 @@ export default function Home() {
     }
   }, [location.state]);
 
-  // Handle scroll position for back to top button
+  // Debounced scroll handler
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const handleScroll = () => {
-      const heroSection = document.getElementById('hero-section');
-      if (heroSection) {
-        const heroHeight = heroSection.offsetHeight;
-        const scrollPosition = window.scrollY;
-        setShowBackToTop(scrollPosition > heroHeight);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
+      timeoutId = setTimeout(() => {
+        const heroSection = document.getElementById('hero-section');
+        if (heroSection) {
+          const heroHeight = heroSection.offsetHeight;
+          const scrollPosition = window.scrollY;
+          setShowBackToTop(scrollPosition > heroHeight);
+        }
+      }, 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Scroll handler for smooth scrolling
+  // Optimized smooth scroll
   const handleSmoothScroll = (elementId: string) => {
     const element = document.getElementById(elementId);
     if (element) {
       const offset = element.offsetTop - 80; // Subtract header height if needed
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth'
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: offset,
+          behavior: 'smooth'
+        });
       });
     }
   };
@@ -114,14 +128,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/50 sm:from-black/50 sm:via-black/30 sm:to-black/40" />
 
         {/* Content Container */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto translate-y-0">
-          <div className="text-center mb-8 sm:mb-12 w-full">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto translate-y-[10%]">
+          <div className="text-center mb-6 sm:mb-8 w-full">
             <h1 className="text-[#E2D9D0] font-serif">
               <motion.span
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="block text-[2.5rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-8 sm:mb-10 tracking-wide"
+                className="block text-[2.5rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 tracking-wide"
               >
                 Prauda Buwaneka
               </motion.span>
@@ -139,7 +153,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="flex justify-center w-full max-w-[280px] sm:max-w-lg mx-auto mt-8 sm:mt-10"
+            className="flex justify-center w-full max-w-[280px] sm:max-w-lg mx-auto mt-6 sm:mt-8"
           >
             <Link
               to="/gallery"
@@ -165,7 +179,7 @@ export default function Home() {
               ease: "easeInOut",
               delay: 1
             }}
-            className="text-white flex flex-col items-center cursor-pointer fixed md:absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 z-[100] hover:text-[#E2D9D0] transition-colors"
+            className="text-white flex flex-col items-center cursor-pointer fixed md:absolute bottom-8 md:bottom-32 left-1/2 transform -translate-x-1/2 z-[100] hover:text-[#E2D9D0] transition-colors"
             onClick={() => handleSmoothScroll('photography-packages')}
           >
             {/* Desktop Scroll Indicator */}
@@ -247,24 +261,22 @@ export default function Home() {
 
             {/* Package Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-[90rem] mx-auto">
-              {packages
-                .filter(pkg => pkg.category === 'Wedding')
-                .map((pkg, index) => (
-                  <motion.div
-                    key={pkg.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    <PackageCard 
-                      package={pkg} 
-                      onBook={() => navigate(`/packages/${pkg.id}`)} 
-                      index={index}
-                      featured={pkg.id === 'wedding-premium'}
-                    />
-                  </motion.div>
-                ))}
+              {packages.map((pkg, index) => (
+                <motion.div
+                  key={pkg.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <PackageCard 
+                    package={pkg} 
+                    onBook={() => navigate(`/packages/${pkg.id}`)} 
+                    index={index}
+                    featured={pkg.id === 'premium-wedding-full'}
+                  />
+                </motion.div>
+              ))}
             </div>
 
             {/* Enhanced CTA Section */}

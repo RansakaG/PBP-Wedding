@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
@@ -17,7 +17,6 @@ import CategoryGallery from './pages/gallery/CategoryGallery';
 function App() {
   return (
     <Router 
-      basename="/PBP-Wedding"
       future={{ 
         v7_startTransition: true,
         v7_relativeSplatPath: true 

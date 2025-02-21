@@ -24,50 +24,26 @@ export default function PackageDetails() {
   }, []);
 
   const basePrices = {
-    'wedding-luxury': 4500,
-    'wedding-premium': 3500,
-    'wedding-classic': 2800,
-    'wedding-essential': 2000,
-    'wedding-intimate': 1500,
-    'wedding-micro': 1000
+    'basic-digital-engagement': 144000,
+    'standard-engagement-album': 214000,
+    'premium-wedding-full': 334000
   };
 
   const additionalServices = {
-    'wedding-luxury': [
-      { id: 'second-engagement', name: 'Second Engagement Session', price: 400, description: 'Additional engagement session at a different location.' },
-      { id: 'extra-album', name: 'Extra Premium Album', price: 500, description: 'Additional 40-page premium leather-bound album.' },
-      { id: 'video-highlight', name: 'Video Highlight Reel', price: 800, description: '5-minute cinematic highlight video of your special day.' },
-      { id: 'prints-collection', name: 'Luxury Print Collection', price: 300, description: 'Set of 20 premium prints in presentation box.' }
+    'basic-digital-engagement': [
+      { id: 'extra-hour', name: 'Additional Hour Coverage', price: 10000, description: 'Extra hour of engagement coverage' },
+      { id: 'extra-enlargement', name: 'Extra 12x18 Wooden Enlargement', price: 15000, description: 'Additional wooden enlargement print' }
     ],
-    'wedding-premium': [
-      { id: 'engagement', name: 'Extended Engagement Session', price: 300, description: '2-hour engagement session with multiple locations.' },
-      { id: 'album', name: 'Premium Photo Album', price: 400, description: 'Additional 30-page premium album.' },
-      { id: 'drone', name: 'Extended Drone Coverage', price: 300, description: 'Additional drone coverage time and locations.' },
-      { id: 'prints', name: 'Premium Prints Package', price: 250, description: 'Set of 15 premium prints.' }
+    'standard-engagement-album': [
+      { id: 'extra-pages', name: 'Additional 10 Album Pages', price: 12000, description: 'Add 10 more pages to your album' },
+      { id: 'extra-enlargement', name: 'Extra 16x24 Wooden Enlargement', price: 18000, description: 'Additional large wooden enlargement' },
+      { id: 'thank-you-cards', name: 'Thank You Cards (4x6)', price: 80, description: 'Per card, minimum order 50 cards' }
     ],
-    'wedding-classic': [
-      { id: 'engagement', name: 'Engagement Session', price: 250, description: '1.5-hour engagement session.' },
-      { id: 'album', name: 'Extra Photo Album', price: 300, description: 'Additional 25-page hardcover album.' },
-      { id: 'drone', name: 'Drone Coverage', price: 250, description: 'Aerial photography coverage.' },
-      { id: 'prints', name: 'Classic Print Package', price: 200, description: 'Set of 12 premium prints.' }
-    ],
-    'wedding-essential': [
-      { id: 'engagement', name: 'Mini Engagement Session', price: 200, description: '1-hour engagement session.' },
-      { id: 'album', name: 'Photo Album', price: 250, description: 'Additional 20-page photo album.' },
-      { id: 'extra-hours', name: 'Extra Coverage Hours', price: 200, description: '2 additional hours of photography coverage.' },
-      { id: 'prints', name: 'Essential Print Package', price: 150, description: 'Set of 10 prints.' }
-    ],
-    'wedding-intimate': [
-      { id: 'engagement', name: 'Mini Engagement Session', price: 150, description: '45-minute engagement session.' },
-      { id: 'album', name: 'Basic Photo Album', price: 200, description: 'Additional 15-page photo album.' },
-      { id: 'extra-hour', name: 'Extra Coverage Hour', price: 150, description: '1 additional hour of photography coverage.' },
-      { id: 'prints', name: 'Print Package', price: 100, description: 'Set of 8 prints.' }
-    ],
-    'wedding-micro': [
-      { id: 'mini-engagement', name: 'Mini Engagement Session', price: 100, description: '30-minute engagement session.' },
-      { id: 'album', name: 'Simple Photo Album', price: 150, description: '12-page photo album.' },
-      { id: 'extra-hour', name: 'Extra Coverage Hour', price: 150, description: '1 additional hour of photography coverage.' },
-      { id: 'prints', name: 'Basic Print Package', price: 75, description: 'Set of 5 prints.' }
+    'premium-wedding-full': [
+      { id: 'extra-pages', name: 'Additional 20 Album Pages', price: 20000, description: 'Add 20 more pages to your wedding album' },
+      { id: 'extra-enlargement', name: 'Extra 20x30 Wooden Enlargement', price: 20000, description: 'Additional large wooden enlargement' },
+      { id: 'thank-you-cards', name: 'Additional Thank You Cards (4x6)', price: 80, description: 'Per card, minimum order 50 cards' },
+      { id: 'second-day', name: 'Second-day Coverage (4 hours)', price: 50000, description: 'Additional coverage for next-day events' }
     ]
   };
 
@@ -225,7 +201,7 @@ export default function PackageDetails() {
                         </div>
                       </div>
                       {isAuthenticated ? (
-                        <span className="text-lg font-serif text-brand-primary">${service.price}</span>
+                        <span className="text-lg font-serif text-brand-primary">LKR {service.price}</span>
                       ) : (
                         <button 
                           onClick={(e) => {
@@ -269,7 +245,7 @@ export default function PackageDetails() {
                 <span className="text-brand-muted">Base Package</span>
                 {isAuthenticated ? (
                   <span className="text-lg font-serif text-brand-dark">
-                    ${basePrices[packageId as keyof typeof basePrices]}
+                    LKR {basePrices[packageId as keyof typeof basePrices]}
                   </span>
                 ) : (
                   <button 
@@ -295,7 +271,7 @@ export default function PackageDetails() {
                       <div key={addonId} className="flex justify-between items-center">
                         <span className="text-sm text-brand-dark">{service.name}</span>
                         {isAuthenticated ? (
-                          <span className="text-brand-dark">${service.price}</span>
+                          <span className="text-brand-dark">LKR {service.price}</span>
                         ) : (
                           <button 
                             onClick={(e) => {
@@ -319,7 +295,7 @@ export default function PackageDetails() {
                 <span className="text-lg font-medium text-brand-dark">Total</span>
                 {isAuthenticated ? (
                   <span className="text-2xl font-serif text-brand-primary">
-                    ${calculateTotalPrice()}
+                    LKR {calculateTotalPrice()}
                   </span>
                 ) : (
                   <button 

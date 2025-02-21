@@ -7,11 +7,18 @@ import PageTransition from '../components/ui/PageTransition';
 // Import hero image
 import heroImage from '../assets/wedding/Dilusha-Ruwindi,Wedding/P1.webp';
 
+const galleryVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.2 }
+};
+
 export default function Gallery() {
   return (
     <PageTransition>
       <ErrorBoundary>
-        <div className="min-h-screen bg-gradient-to-b from-brand-beige/20 to-white">
+        <div className="min-h-screen bg-gradient-to-b from-brand-beige/20 to-white will-change-transform">
           {/* Hero Section */}
           <section className="relative h-[40vh] overflow-hidden">
             <div className="absolute inset-0">
@@ -19,6 +26,8 @@ export default function Gallery() {
                 src={heroImage}
                 alt="Gallery Hero"
                 className="w-full h-full object-cover"
+                fetchPriority="high"
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/40 to-brand-dark/80" />
             </div>
@@ -45,13 +54,24 @@ export default function Gallery() {
 
           {/* Gallery Grid */}
           <section className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {categories.map((category, index) => (
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={{
+                animate: {
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+            >
+              {categories.map((category) => (
                 <motion.div
                   key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  variants={galleryVariants}
+                  style={{ willChange: 'opacity' }}
                   className="group"
                 >
                   <Link to={category.path} className="block">
@@ -70,7 +90,7 @@ export default function Gallery() {
                   </Link>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </section>
         </div>
       </ErrorBoundary>

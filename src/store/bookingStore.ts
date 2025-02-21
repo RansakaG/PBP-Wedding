@@ -14,105 +14,56 @@ interface BookingStore {
 export const useBookingStore = create<BookingStore>((set) => ({
   packages: [
     {
-      id: 'wedding-luxury',
-      name: 'Luxury Wedding',
-      category: 'Wedding',
-      description: 'The ultimate wedding photography experience with premium coverage and exclusive extras',
+      id: 'basic-digital-engagement',
+      name: 'Basic Digital Engagement Package',
+      category: 'Engagement',
+      description: 'A perfect package for couples looking for digital memories of their engagement.',
       features: [
-        'Full day coverage (12 hours)',
-        'Three professional photographers',
-        'Engagement & pre-wedding session',
-        'Premium leather-bound album (40 pages)',
-        'Parents albums (2 copies)',
-        'Drone aerial videography & photography',
-        'Same-day preview images',
-        'Professional editing and retouching',
-        'Wedding day timeline consultation',
-        'Multiple locations coverage',
-        'Private online gallery',
-        'USB drive with all images'
+        'Pre-engagement couple shoot',
+        'Full engagement function coverage',
+        '6 hours exclusive coverage',
+        '30 professionally edited couple photos',
+        'One 12x18 classic wooden enlargement',
+        'Lifetime warranty on album prints',
+        'Digital album within two months',
+        'Professional editing and enhancement',
+        'High-resolution digital files'
       ]
     },
     {
-      id: 'wedding-premium',
-      name: 'Premium Wedding',
+      id: 'standard-engagement-album',
+      name: 'Standard Engagement Package with Album',
+      category: 'Engagement',
+      description: 'Complete engagement coverage with premium printed album and digital memories.',
+      features: [
+        'Pre-engagement couple shoot',
+        'Full engagement function coverage',
+        '6 hours exclusive coverage',
+        'Premium 10x24 magazine album (40 pages)',
+        'Album box or leather pouch included',
+        'All digital soft copies',
+        'Professionally designed album prints',
+        'Lifetime warranty on prints',
+        'Professional editing and enhancement'
+      ]
+    },
+    {
+      id: 'premium-wedding-full',
+      name: 'Premium Wedding Full Package',
       category: 'Wedding',
-      description: 'Comprehensive wedding coverage with premium features',
+      description: 'A complete wedding day package with premium coverage and deliverables.',
       features: [
         'Full day coverage (10 hours)',
-        'Two professional photographers',
-        'Engagement session included',
-        'Premium leather-bound album (30 pages)',
-        'Online gallery with high-res images',
-        'Drone aerial photography',
-        'Same-day preview images',
-        'Professional editing and retouching',
-        'Wedding day timeline consultation',
-        'Multiple locations coverage'
-      ]
-    },
-    {
-      id: 'wedding-classic',
-      name: 'Classic Wedding',
-      category: 'Wedding',
-      description: 'Traditional wedding coverage with essential features',
-      features: [
-        'Full day coverage (8 hours)',
-        'Two photographers',
-        'Hardcover photo album (25 pages)',
-        'Online gallery',
-        'Professional editing',
-        'Engagement mini-session',
-        'Wedding day consultation',
-        'High-resolution digital files',
-        'Print release included'
-      ]
-    },
-    {
-      id: 'wedding-essential',
-      name: 'Essential Wedding',
-      category: 'Wedding',
-      description: 'Perfect coverage for intimate weddings',
-      features: [
-        '8 hours of coverage',
-        'One lead photographer',
-        'Second shooter for 4 hours',
-        'Digital gallery with downloads',
-        'Custom photo album (20 pages)',
-        'Professional editing',
-        'High-resolution images',
-        'Print release'
-      ]
-    },
-    {
-      id: 'wedding-intimate',
-      name: 'Intimate Wedding',
-      category: 'Wedding',
-      description: 'Ideal for small, intimate ceremonies and elopements',
-      features: [
-        '6 hours of coverage',
-        'One photographer',
-        'Digital gallery',
-        'Professional editing',
-        'High-resolution images',
-        'Print release',
-        'Mini photo album (15 pages)',
-        'Online sharing gallery'
-      ]
-    },
-    {
-      id: 'wedding-micro',
-      name: 'Micro Wedding',
-      category: 'Wedding',
-      description: 'Perfect for micro weddings and civil ceremonies',
-      features: [
-        '4 hours of coverage',
-        'One photographer',
-        'Digital gallery',
-        'Professional editing',
-        'High-resolution images',
-        'Print release',
-        'Online sharing gallery'
+        'Bride & groom couple shoot',
+        'Two active photographers',
+        'Main photographer: Prauda Buwaneka',
+        'Wedding magazine album (12x30 or 16x24, 50 pages)',
+        'Album with wood box or leather pouch',
+        '100 thanking cards (4x6)',
+        'One 16x24 wooden enlargement OR two 12x18',
+        'All edited photos on USB drive',
+        'Professional pre- and post-processing',
+        'High-resolution digital files'
       ]
     }
   ],
