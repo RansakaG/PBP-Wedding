@@ -1,173 +1,191 @@
-import { useState, useCallback, useRef, useEffect, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, memo, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { GalleryImage } from '../../types/gallery';
-import { useImageLoad } from '../../hooks/useImageLoad';
+import { ZoomIn } from 'lucide-react';
+import ImageWithSkeleton from '../ui/ImageWithSkeleton';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import { X, ZoomIn, Download, Share, ChevronLeft, ChevronRight } from 'lucide-react';
 import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 
 interface GalleryGridProps {
   images: GalleryImage[];
   onLoadMore?: () => void;
   hasMore?: boolean;
+  onImageClick?: (image: GalleryImage, index: number) => void;
+  isAlbumView?: boolean;
 }
 
-interface LightboxProps {
+const GalleryItem = memo(({ 
+  image, 
+  index, 
+  onImageClick,
+  priority = false 
+}: { 
   image: GalleryImage;
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-  hasPrev: boolean;
-  hasNext: boolean;
-}
+  index: number;
+  onImageClick: (image: GalleryImage) => void;
+  priority?: boolean;
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const isInView = useIntersectionObserver(imageRef, { threshold: 0.1 })?.isIntersecting;
 
-function Lightbox({ image, onClose, onPrev, onNext, hasPrev, hasNext }: LightboxProps) {
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  const isActive = isHovered || isFocused;
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onImageClick(image);
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <div className="absolute top-4 right-4 z-50 flex space-x-4">
-        <button
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(image.url, '_blank');
-          }}
-        >
-          <Download className="w-5 h-5" />
-        </button>
-        <button
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigator.share?.({
-              title: image.title,
-              text: image.description,
-              url: image.url,
-            }).catch(() => {});
-          }}
-        >
-          <Share className="w-5 h-5" />
-        </button>
-        <button
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-          onClick={onClose}
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      <button
-        className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors ${
-          !hasPrev && 'opacity-50 cursor-not-allowed'
-        }`}
-        onClick={(e) => {
-          e.stopPropagation();
-          hasPrev && onPrev();
-        }}
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      <button
-        className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors ${
-          !hasNext && 'opacity-50 cursor-not-allowed'
-        }`}
-        onClick={(e) => {
-          e.stopPropagation();
-          hasNext && onNext();
-        }}
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      <div className="max-w-7xl max-h-[90vh] px-4" onClick={(e) => e.stopPropagation()}>
-        <img
-          src={image.url}
-          alt={image.title}
-          className="max-w-full max-h-[85vh] object-contain mx-auto"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-const GalleryItem = memo(({ image, index, onImageClick }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: Math.min(index * 0.1, 1) }}
-      className="relative aspect-square group cursor-pointer"
+      ref={imageRef}
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${image.title || 'image'}`}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: isInView ? 1 : 0, scale: isInView ? 1 : 0.95 }}
+      transition={{ 
+        duration: 0.5,
+        delay: Math.min(index * 0.05, 0.3),
+        ease: "easeOut"
+      }}
+      className="relative aspect-square group cursor-pointer overflow-hidden rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-dark focus:ring-offset-2"
       onClick={() => onImageClick(image)}
-      style={{ willChange: 'opacity' }}
+      onKeyDown={handleKeyDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
-      <img
+      <ImageWithSkeleton
         src={image.url}
-        alt={image.title}
-        className="w-full h-full object-cover rounded-lg"
-        loading="lazy"
-        decoding="async"
+        alt={image.title || 'Gallery image'}
+        priority={priority}
+        quality={priority ? 'high' : 'medium'}
+        className={`w-full h-full object-cover transition-all duration-500 ${
+          isActive ? 'scale-105' : 'scale-100'
+        }`}
+        containerClassName="absolute inset-0"
       />
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+
+      {/* Hover/Focus overlay */}
+      <motion.div 
+        className="absolute inset-0 bg-black/40"
+        initial={false}
+        animate={{ opacity: isActive ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div 
+          className="absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0.8 }}
+        >
+          <ZoomIn className="w-8 h-8 text-white" aria-hidden="true" />
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 });
 
-export default function GalleryGrid({ images, onLoadMore, hasMore = false }: GalleryGridProps) {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+GalleryItem.displayName = 'GalleryItem';
+
+export default function GalleryGrid({ images, onLoadMore, hasMore = false, onImageClick, isAlbumView = false }: GalleryGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {});
 
+  // Handle infinite scroll
   useEffect(() => {
     if (loadMoreObserver?.isIntersecting && hasMore && onLoadMore) {
       onLoadMore();
     }
   }, [loadMoreObserver?.isIntersecting, hasMore, onLoadMore]);
 
-  const handlePrevImage = useCallback(() => {
-    setSelectedImage((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
+  // Get viewport size once on mount
+  const [viewportSize, setViewportSize] = useState({ 
+    width: window.innerWidth,
+    height: window.innerHeight 
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportSize({ 
+        width: window.innerWidth,
+        height: window.innerHeight 
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleNextImage = useCallback(() => {
-    setSelectedImage((prev) => (prev !== null && prev < images.length - 1 ? prev + 1 : prev));
-  }, [images.length]);
+  // Calculate priority images based on viewport
+  const getPriorityCount = () => {
+    if (isAlbumView) {
+      // For album views, load more images initially
+      return viewportSize.width < 640 ? 6  // Mobile: 2 rows of 1
+        : viewportSize.width < 1024 ? 8    // Tablet: 2 rows of 2
+        : 12;                              // Desktop: 2 rows of 3
+    }
+    // For regular gallery views
+    return viewportSize.width < 640 ? 4    // Mobile: 2 rows of 1
+      : viewportSize.width < 1024 ? 6      // Tablet: 2 rows of 2
+      : 9;                                 // Desktop: 2 rows of 3
+  };
 
   return (
     <>
-      <AnimatePresence mode="popLayout">
-        <motion.div 
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {images.map((image, index) => (
-            <GalleryItem 
-              key={image.id} 
-              image={image} 
-              index={index}
-              onImageClick={() => setSelectedImage(index)}
+      <motion.div 
+        ref={gridRef}
+        role="grid"
+        aria-label="Image gallery"
+        layout
+        className={`grid gap-3 sm:gap-4 md:gap-6 p-1 ${
+          isAlbumView 
+            ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' 
+            : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+        }`}
+      >
+        {images.map((image, index) => (
+          <motion.div 
+            key={image.id}
+            role="gridcell"
+            className="relative aspect-square"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.5,
+              delay: Math.min(index * 0.05, 0.3)
+            }}
+          >
+            <ImageWithSkeleton 
+              src={image.thumbnailUrl || image.url}
+              alt={image.title || 'Gallery image'}
+              priority={index < getPriorityCount()}
+              quality={index < getPriorityCount() ? 'high' : 'auto'}
+              className="w-full h-full object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+              containerClassName="absolute inset-0"
+              onClick={() => onImageClick?.(image, index)}
             />
-          ))}
-        </motion.div>
-
-        {selectedImage !== null && (
-          <Lightbox
-            image={images[selectedImage]}
-            onClose={() => setSelectedImage(null)}
-            onPrev={handlePrevImage}
-            onNext={handleNextImage}
-            hasPrev={selectedImage > 0}
-            hasNext={selectedImage < images.length - 1}
-          />
-        )}
-      </AnimatePresence>
+          </motion.div>
+        ))}
+      </motion.div>
 
       {hasMore && (
-        <div ref={loadMoreRef} className="mt-8 flex justify-center">
+        <div 
+          ref={loadMoreRef} 
+          className="mt-6 sm:mt-8 flex justify-center"
+          role="status" 
+          aria-label="Loading more images"
+        >
           <LoadingSpinner size="lg" />
         </div>
       )}

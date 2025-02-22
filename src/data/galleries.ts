@@ -1,19 +1,32 @@
 import { GalleryImage, GalleryCategory } from '../types/gallery';
+import { addThumbnailUrls } from '../utils/image-utils';
 
-// Import cover images
-import dilushaPre from '../assets/wedding/Dilusha-Ruwindi,Pre-Wedding Shoot/0 (10).webp';
-import dilushaWedding from '../assets/wedding/Dilusha-Ruwindi,Wedding/P15.webp';
-import kalpanaIsuru from '../assets/wedding/Kalpana-Isuru/R6PB4326.webp';
-import nishdiSahan from '../assets/wedding/Nishdi-Sahan,Wedding/IMGL7034.webp';
-import sanjaMigara from '../assets/wedding/Sanja-Migara,Wedding/A9.webp';
-import sandaliChathuranga from '../assets/wedding/Sandali & Chathuranga/0 (2).webp';
+// Import cover images and their thumbnails
+const dilushaPre = new URL('../assets/wedding/Dilusha-Ruwindi,Pre-Wedding Shoot/0 (10).webp', import.meta.url).href;
+const dilushaPreThumb = new URL('../assets/wedding/Dilusha-Ruwindi,Pre-Wedding Shoot/0 (10)-thumb.webp', import.meta.url).href;
 
-export const categories: GalleryCategory[] = [
+const dilushaWedding = new URL('../assets/wedding/Dilusha-Ruwindi,Wedding/P15.webp', import.meta.url).href;
+const dilushaWeddingThumb = new URL('../assets/wedding/Dilusha-Ruwindi,Wedding/P15-thumb.webp', import.meta.url).href;
+
+const kalpanaIsuru = new URL('../assets/wedding/Kalpana-Isuru/R6PB4326.webp', import.meta.url).href;
+const kalpanaIsuruThumb = new URL('../assets/wedding/Kalpana-Isuru/R6PB4326-thumb.webp', import.meta.url).href;
+
+const nishdiSahan = new URL('../assets/wedding/Nishdi-Sahan,Wedding/IMGL7034.webp', import.meta.url).href;
+const nishdiSahanThumb = new URL('../assets/wedding/Nishdi-Sahan,Wedding/IMGL7034-thumb.webp', import.meta.url).href;
+
+const sanjaMigara = new URL('../assets/wedding/Sanja-Migara,Wedding/A9.webp', import.meta.url).href;
+const sanjaMigaraThumb = new URL('../assets/wedding/Sanja-Migara,Wedding/A9-thumb.webp', import.meta.url).href;
+
+const sandaliChathuranga = new URL('../assets/wedding/Sandali & Chathuranga/0 (2).webp', import.meta.url).href;
+const sandaliChathurangaThumb = new URL('../assets/wedding/Sandali & Chathuranga/0 (2)-thumb.webp', import.meta.url).href;
+
+const categories: GalleryCategory[] = [
   {
     id: 'dilusha-pre',
     title: 'Dilusha & Ruwindi',
     description: 'Beautiful moments from their pre-wedding photoshoot',
     coverImage: dilushaPre,
+    thumbnailUrl: dilushaPreThumb,
     path: '/gallery/dilusha-pre'
   },
   {
@@ -21,6 +34,7 @@ export const categories: GalleryCategory[] = [
     title: 'Dilusha & Ruwindi',
     description: 'Capturing the magic of their special day',
     coverImage: dilushaWedding,
+    thumbnailUrl: dilushaWeddingThumb,
     path: '/gallery/dilusha-wedding'
   },
   {
@@ -28,6 +42,7 @@ export const categories: GalleryCategory[] = [
     title: 'Kalpana & Isuru',
     description: 'A celebration of love and joy',
     coverImage: kalpanaIsuru,
+    thumbnailUrl: kalpanaIsuruThumb,
     path: '/gallery/kalpana-isuru'
   },
   {
@@ -35,6 +50,7 @@ export const categories: GalleryCategory[] = [
     title: 'Nishdi & Sahan',
     description: 'Elegant moments from their wedding celebration',
     coverImage: nishdiSahan,
+    thumbnailUrl: nishdiSahanThumb,
     path: '/gallery/nishdi-sahan'
   },
   {
@@ -42,6 +58,7 @@ export const categories: GalleryCategory[] = [
     title: 'Sanja & Migara',
     description: 'Beautiful wedding day memories',
     coverImage: sanjaMigara,
+    thumbnailUrl: sanjaMigaraThumb,
     path: '/gallery/sanja-migara'
   },
   {
@@ -49,12 +66,13 @@ export const categories: GalleryCategory[] = [
     title: 'Sandali & Chathuranga',
     description: 'Beautiful model photoshoot showcasing their chemistry',
     coverImage: sandaliChathuranga,
+    thumbnailUrl: sandaliChathurangaThumb,
     path: '/gallery/sandali-chathuranga'
   }
 ];
 
 // Import gallery images
-const galleryImages: Record<string, GalleryImage[]> = {
+const rawGalleryImages: Record<string, GalleryImage[]> = {
   'dilusha-pre': [
     { id: 'dp1', url: new URL('../assets/wedding/Dilusha-Ruwindi,Pre-Wedding Shoot/0 (10).webp', import.meta.url).href, title: 'Pre-Wedding 1', category: 'pre-wedding' },
     { id: 'dp2', url: new URL('../assets/wedding/Dilusha-Ruwindi,Pre-Wedding Shoot/0 (11).webp', import.meta.url).href, title: 'Pre-Wedding 2', category: 'pre-wedding' },
@@ -149,4 +167,10 @@ const galleryImages: Record<string, GalleryImage[]> = {
   ]
 };
 
+// Process images to add thumbnail URLs
+const galleryImages: Record<string, GalleryImage[]> = Object.fromEntries(
+  Object.entries(rawGalleryImages).map(([key, images]) => [key, addThumbnailUrls(images)])
+);
+
 export { galleryImages };
+export default categories;

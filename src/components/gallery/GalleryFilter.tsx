@@ -21,6 +21,7 @@ export default function GalleryFilter({
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedSort, setSelectedSort] = useState<'newest' | 'oldest' | 'popular'>('newest');
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,21 +115,39 @@ export default function GalleryFilter({
 
       {/* Category Pills */}
       <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-4 sm:px-0">
-        {categories.map((category) => (
-          <motion.button
-            key={category.id}
-            onClick={() => onCategoryChange(category.id)}
-            className={`relative overflow-hidden px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
-              activeCategory === category.id
-                ? 'bg-[#D9CFC4] text-gray-800 shadow-lg shadow-[#D9CFC4]/20'
-                : 'bg-white/90 text-gray-700 hover:bg-white border border-gray-200 hover:border-[#D9CFC4]/30 hover:shadow-md'
-            }`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {category.title}
-          </motion.button>
-        ))}
+        <AnimatePresence mode="wait">
+          {categories.map((category) => (
+            <motion.button
+              key={category.id}
+              onClick={() => onCategoryChange(category.id)}
+              onMouseEnter={() => setHoveredCategory(category.id)}
+              onMouseLeave={() => setHoveredCategory(null)}
+              className={`relative overflow-hidden px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
+                activeCategory === category.id
+                  ? 'bg-[#D9CFC4] text-gray-800 shadow-lg shadow-[#D9CFC4]/20'
+                  : 'bg-white/90 text-gray-700 hover:bg-white border border-gray-200 hover:border-[#D9CFC4]/30 hover:shadow-md'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {/* Background */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-[#D9CFC4]"
+                initial={false}
+                animate={{
+                  opacity: activeCategory === category.id ? 1 : 0,
+                  scale: hoveredCategory === category.id ? 1.05 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+              />
+
+              {/* Text */}
+              <span className="relative">
+                {category.title}
+              </span>
+            </motion.button>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );

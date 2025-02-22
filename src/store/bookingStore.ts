@@ -16,7 +16,7 @@ export const useBookingStore = create<BookingStore>((set) => ({
     {
       id: 'basic-digital-engagement',
       name: 'Basic Digital Engagement Package',
-      category: 'Engagement',
+      category: 'Wedding',
       description: 'A perfect package for couples looking for digital memories of their engagement.',
       features: [
         'Pre-engagement couple shoot',
@@ -33,7 +33,7 @@ export const useBookingStore = create<BookingStore>((set) => ({
     {
       id: 'standard-engagement-album',
       name: 'Standard Engagement Package with Album',
-      category: 'Engagement',
+      category: 'Wedding',
       description: 'Complete engagement coverage with premium printed album and digital memories.',
       features: [
         'Pre-engagement couple shoot',

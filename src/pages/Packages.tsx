@@ -16,7 +16,9 @@ export default function Packages() {
   const { isAuthenticated } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(
+    location.state?.viewMode || 'grid'
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     priceRange: null,

@@ -13,7 +13,8 @@ export function useImageLoad(src: string, options: UseImageLoadOptions = {}) {
     const img = new Image();
     
     if (options.priority) {
-      img.fetchPriority = 'high';
+      // @ts-ignore - fetchpriority is a valid attribute but not in TS types yet
+      img.fetchpriority = 'high';
     }
 
     if (options.lazy) {

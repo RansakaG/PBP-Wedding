@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { categories, galleryImages } from '../../data/galleries';
+import categories, { galleryImages } from '../../data/galleries';
+import { GalleryImage } from '../../types/gallery';
 import ImageLightbox from '../../components/gallery/ImageLightbox';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import GalleryGrid from '../../components/gallery/GalleryGrid';
 
 export default function CategoryGallery() {
   const { category } = useParams<{ category: string }>();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [isHeroLoaded, setIsHeroLoaded] = useState(false);
   
   const categoryData = categories.find(c => c.id === category);
   const images = category ? galleryImages[category] : [];
+
+  const handleImageClick = (_: GalleryImage, index: number) => {
+    setSelectedImageIndex(index);
+  };
 
   if (!categoryData) {
     return (
@@ -21,16 +29,40 @@ export default function CategoryGallery() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-beige/20 to-white">
-      {/* Hero Section */}
-      <section className="relative h-[40vh] overflow-hidden">
+      {/* Hero Section - Responsive height */}
+      <section className="relative h-[30vh] sm:h-[40vh] overflow-hidden">
         <div className="absolute inset-0">
+          {/* Loading state */}
+          {!isHeroLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <LoadingSpinner size="lg" />
+            </div>
+          )}
+          
+          {/* Hero images with progressive loading */}
+          <motion.img
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.8 }}
+            src={categoryData.thumbnailUrl}
+            alt={categoryData.title}
+            className={`w-full h-full object-cover transition-opacity duration-500 ${
+              isHeroLoaded ? 'opacity-0' : 'opacity-100'
+            }`}
+            fetchPriority="high"
+          />
+          
           <motion.img
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.8 }}
             src={categoryData.coverImage}
             alt={categoryData.title}
-            className="w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              isHeroLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={() => setIsHeroLoaded(true)}
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/40 to-brand-dark/80" />
         </div>
@@ -39,7 +71,7 @@ export default function CategoryGallery() {
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-7xl font-serif text-white mb-6"
+              className="text-3xl sm:text-5xl md:text-7xl font-serif text-white mb-4 sm:mb-6"
             >
               {categoryData.title}
             </motion.h1>
@@ -47,7 +79,7 @@ export default function CategoryGallery() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-brand-beige text-lg md:text-xl max-w-2xl mx-auto"
+              className="text-brand-beige text-sm sm:text-lg md:text-xl max-w-2xl mx-auto"
             >
               {categoryData.description}
             </motion.p>
@@ -55,27 +87,12 @@ export default function CategoryGallery() {
         </div>
       </section>
 
-      {/* Images Grid */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <motion.div
-              key={image.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="relative aspect-square group cursor-pointer"
-              onClick={() => setSelectedImageIndex(index)}
-            >
-              <img
-                src={image.url}
-                alt={image.title}
-                className="w-full h-full object-cover rounded-lg transform transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
-            </motion.div>
-          ))}
-        </div>
+      {/* Images Grid - Optimized padding for mobile */}
+      <section className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-8 sm:py-12 md:py-16">
+        <GalleryGrid
+          images={images}
+          onImageClick={handleImageClick}
+        />
       </section>
 
       {/* Lightbox */}

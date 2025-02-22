@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "deploy": "gh-pages -d dist",
     "gcp-build": "npm run build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "generate:thumbnails": "node scripts/generate-thumbnails.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -49,6 +50,7 @@
     "globals": "^15.9.0",
     "jsdom": "^24.0.0",
     "postcss": "^8.4.35",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
